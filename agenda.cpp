@@ -83,7 +83,6 @@ void menuCli()
 void menuViewBuild(int& ponteiro_opcao)
 {
    
-
     cout << "\nBem vindo à Agenda CLI..."<< endl;
     cout << "Selecione uma das opções a Seguir: \n";
     cout << "[1] Cadastrar um novo contato \n";
@@ -102,7 +101,7 @@ void createContato(contato* ponteiro)
     int indice = 0, contador = countContatos(ponteiro);
     if(contador == 20)
     {
-        cout << "Você já atingiu a Cota de contatos, \npara cadastrar mais eclua alguns contatos\n";
+        cout << "Você já atingiu a Cota de contatos, \npara cadastrar mais exclua alguns contatos\n";
         return;
     }
 
@@ -138,14 +137,17 @@ void createContato(contato* ponteiro)
 
 int countContatos(contato* contatos)
 {
-    int i = 0;
-
-    while(strcmp(contatos[i].nome, "NULL") != 0)
+    int contagem = 0;
+       
+    for(int i=0;i<=20;i++)
     {
-        i++;
+        if(strcmp(contatos[i].nome, "NULL") != 0)
+        {
+            contagem++;
+        }
     }
 
-    return i;
+    return contagem;
 }
 
 void classificaContatos(contato* ponteiro)
@@ -203,7 +205,7 @@ void consultaContato(contato* ponteiro)
     char consulta[32];
 
     cout << "Consulta de contato por nome..." << "\nForneça um nome para consulta: ";
-    cin >> consulta;
+    cin.getline(consulta, sizeof(consulta));
 
     for(int i =0; i<=20;i++)
     {
