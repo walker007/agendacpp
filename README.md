@@ -4,7 +4,7 @@
 
 1. Programação com Desvios usando ```switch...case``` e ```if```;
 2. Programação com Laços usando ```while``` e ```for```;
-3. Programação com Matrizes, Ponteiros e Estrutura de dados;
+3. Programação com Matrizes, Ponteiros e Estrutura Heterogênea de dados;
 4. Programação com Funções e Sub-rotinas;
 5. Prototipação de Funções e de Sub-rotinas;
 
@@ -17,7 +17,7 @@
 3. Pesquisa de contatos;
 4. Exclusão e classificação de contatos.
 
->A classificação aqui Mencionada se dá em ordem alfabética;
+>A classificação aqui Mencionada se dá em ordem alfabética, usando o Algorítmo Bouble Sort, e a pesquisa foi escolhido o algorítmo de consulta binária;
 
 ## Referências Bibliográficas:
 

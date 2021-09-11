@@ -17,12 +17,14 @@ void createContato(contato* ponteiro);
 void showContatos(contato* ponteiro);
 int countContatos(contato* contatos);
 void classificaContatos(contato* ponteiro);
+int consultaBinariaContato(contato* ponteiro);
 void consultaContato(contato* ponteiro);
 void apagaContato(contato* ponteiro_contato);
+void showContatoView(contato* ponteiro, int index);
 
 int main()
 {
-    menuCli();    
+    menuCli();
     return EXIT_SUCCESS;
 }
 
@@ -31,7 +33,7 @@ void menuCli()
     int opcao;
     bool sair = false;
     contato *ponteiro_contatos;
-    
+
     ponteiro_contatos = new contato[sizeof(contato)*20];
     for(int i =0;i<=20;i++)
     {
@@ -39,7 +41,7 @@ void menuCli()
         strcpy(ponteiro_contatos[i].endereco,"NULL");
         ponteiro_contatos[i].numero = 0;
     }
-    
+
     cout <<  "--- Agenda CLI for Linux Users ---" << endl;
     cout << "Obs.: Essa agenda não persiste dados" << endl;
 
@@ -71,6 +73,7 @@ void menuCli()
                 classificaContatos(ponteiro_contatos);
             break;
             default:
+                cout << "Você selecionou S..."<< endl;
                 sair = true;
             break;
         }
@@ -82,7 +85,7 @@ void menuCli()
 
 void menuViewBuild(int& ponteiro_opcao)
 {
-   
+
     cout << "\nBem vindo à Agenda CLI..."<< endl;
     cout << "Selecione uma das opções a Seguir: \n";
     cout << "[1] Cadastrar um novo contato \n";
@@ -93,11 +96,12 @@ void menuViewBuild(int& ponteiro_opcao)
     cout << "Digite uma opção entre as que aparecem na tela e aperte [Enter]: ";
     cin >> ponteiro_opcao;
     cin.ignore(8, '\n');
+
 }
 
 void createContato(contato* ponteiro)
 {
-    
+
     int indice = 0, contador = countContatos(ponteiro);
     if(contador == 20)
     {
@@ -107,12 +111,12 @@ void createContato(contato* ponteiro)
 
    for(int i =0; i<=20;i++)
    {
-       
+
        if(strcmp(ponteiro[i].nome, "NULL") == 0)
        {
            indice = i;
            break;
-          
+
        }
 
    }
@@ -122,7 +126,7 @@ void createContato(contato* ponteiro)
     cout << "Informe o nome: " ;
     cin.getline(nome, sizeof(nome));
     strcpy(ponteiro[indice].nome, nome);
-    
+
     cout << "Informe o Endereço: " ;
     cin.getline(endereco, sizeof(endereco));
     strcpy(ponteiro[indice].endereco, endereco);
@@ -138,7 +142,7 @@ void createContato(contato* ponteiro)
 int countContatos(contato* contatos)
 {
     int contagem = 0;
-       
+
     for(int i=0;i<=20;i++)
     {
         if(strcmp(contatos[i].nome, "NULL") != 0)
@@ -159,82 +163,67 @@ void classificaContatos(contato* ponteiro)
 
     for(i=0;i<=contador;i++)
     {
-        for(j=0;j<=contador-1;j++)
+
+        for(j=0;j<=contador;j++)
         {
-            if(strcmp(ponteiro[i].nome, ponteiro[j].nome) < 0)
+
+            if(strcmp(ponteiro[i].nome, ponteiro[j].nome) < 0 and !(strcmp(ponteiro[i].nome,"NULL") == 0))
             {
                 contato_auxiliar = ponteiro[i];
                 ponteiro[i] = ponteiro[j];
                 ponteiro[j] = contato_auxiliar;
             }
+
         }
     }
 }
 
 void showContatos(contato* ponteiro)
 {
-    
-    char event[1];
     int contador = countContatos(ponteiro);
 
     for(int i =0; i<=20;i++)
     {
         if(strcmp(ponteiro[i].nome, "NULL") != 0)
         {
-            cout << "--" << endl;
-            cout << "Codigo: " << i+1 << endl;
-            cout << "Nome: " << ponteiro[i].nome << endl;
-            cout << "Endereço: " << ponteiro[i].endereco << endl;
-            cout << "Número: " << ponteiro[i].numero << endl;
-           
+            showContatoView(ponteiro, i);
         }
     }
-    
+
     if(contador < 1)
     {
         cout << "Você não possui contatos a serem exibidos..." << endl;
     }
 
-    cout << "[M] Para Voltar ao Menu...";
-    cin >> event;
+    cout << "[Enter] Para Voltar ao Menu...";
+    cin.get();
     cout << "Retornando...";
 }
 
 void consultaContato(contato* ponteiro)
 {
-    char consulta[32];
-
-    cout << "Consulta de contato por nome..." << "\nForneça um nome para consulta: ";
-    cin.getline(consulta, sizeof(consulta));
-
-    for(int i =0; i<=20;i++)
+   int contato = consultaBinariaContato(ponteiro);
+   
+    if(contato >= 0)
     {
-        if(strcmp(ponteiro[i].nome, consulta) == 0)
-        {
-            cout << "--" << endl;
-            cout << "Codigo: " << i+1 << endl;
-            cout << "Nome: " << ponteiro[i].nome << endl;
-            cout << "Endereço: " << ponteiro[i].endereco << endl;
-            cout << "Número: " << ponteiro[i].numero << endl;
-        }
+        showContatoView(ponteiro, contato);
+    }else{
+        cout << "O contato que você consultou não Existe..." << endl;
     }
 
 }
 
 void apagaContato(contato* ponteiro_contato)
 {
-    char contato_i[1] ,resposta[1];
+    char resposta[1];
     int contato;
 
-    cout << "Informe o Código de um contato para apagar: ";
-    cin >> contato_i;
-    contato = atoi(contato_i) -1;
+    contato = consultaBinariaContato(ponteiro_contato);
+    
     cout << "Tem certeza que deseja apagar o contato? " << endl;
 
-            cout << "Codigo: " << contato+1 << endl;
-            cout << "Nome: " << ponteiro_contato[contato].nome << endl;
-            cout << "Endereço: " << ponteiro_contato[contato].endereco << endl;
-            cout << "Número: " << ponteiro_contato[contato].numero << endl;
+    showContatoView(ponteiro_contato, contato);
+            
     cout << "[S] para confirmar ou [N] para retornar: ";
     cin >> resposta;
 
@@ -244,4 +233,46 @@ void apagaContato(contato* ponteiro_contato)
         strcpy(ponteiro_contato[contato].endereco,"NULL");
         ponteiro_contato[contato].numero = 0;
     }
+}
+
+int consultaBinariaContato(contato* ponteiro)
+{
+    char consulta[32];
+    int inicio = 0 , fim = countContatos(ponteiro)-1 , meio = (inicio+fim)/2;
+
+    cout << "Consulta de contato por nome..." << "\nForneça um nome para consulta: ";
+    cin.getline(consulta, sizeof(consulta));
+
+    while(strcmp(consulta, ponteiro[meio].nome) != 0 && meio != fim)
+    {
+      meio =(inicio+fim)/2;
+
+      if(strcmp(consulta, ponteiro[meio].nome) > 0)
+      {
+
+        inicio = meio+1;
+
+      }else{
+
+        fim=meio;
+        meio=(inicio+fim)/2;
+
+      }
+    }
+
+    if(strcmp(consulta, ponteiro[meio].nome) == 0)
+    {
+       return meio;
+    }
+    
+    return -1;
+}
+
+void showContatoView(contato* ponteiro, int index)
+{
+    cout << "-----------------------------------" << endl;
+    cout << "Codigo: " << index+1 << endl;
+    cout << "Nome: " << ponteiro[index].nome << endl;
+    cout << "Endereço: " << ponteiro[index].endereco << endl;
+    cout << "Número: " << ponteiro[index].numero << endl;
 }
